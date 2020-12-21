@@ -48,9 +48,9 @@ function getUserInputs() {
     passwordLength = prompt('What should the length of the password be?  Please choose a number between 8 and 128 and press OK.');
 
     if (isNaN(passwordLength)) {
-      alert('Must enter a numeric value.  Please try again and press OK.');
+      alert('Must enter a numeric value.  Please try again.');
     } else if (passwordLength < 8 || passwordLength > 128) {
-      alert('Value must be between 8 and 128.  Please try again and press OK.');
+      alert('Value must be between 8 and 128.  Please try again.');
     } else {
       //alert('Press the "Generate Password" button when you are ready.  You may keep pressing it as many times as you like until getting a password to your liking.');
       isInputCollected = true;
