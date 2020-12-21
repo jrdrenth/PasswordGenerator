@@ -4,15 +4,60 @@ var numbers = '0123456789'.split('');
 var lowerCaseLetters = 'abcdefghijklmnopqrstuvwxzy'.split('');
 var upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-var passwordLength = 128;
+// Initialize user input with default values
+var passwordLength = 18;
 var useSpecialCharacters = true;
 var useNumbers = true;
 var useLowerCaseLetters = true;
 var useUpperCaseLetters = true;
 
+// Generate Password button from html
+var generateBtn = document.querySelector('#generate');
 
-// Assignment Code
-var generateBtn = document.querySelector("#generate");
+// FUNCTIONS
+function getUserInputs() {
+  var textPrefix = 'Use ';
+  var textSuffix = '?  Press OK to accept or Cancel to decline.';
+  var errorMessage = 'You must select at least one to generate the password.  Please try again.';
+
+  //alert('Please answer the following questions so that a password can be generated.');
+
+  var isInputCollected = false;
+  while (!isInputCollected) {
+    let displayText = 'special characters';
+    useSpecialCharacters = confirm(textPrefix + displayText + textSuffix);
+
+    displayText = 'numbers';
+    useNumbers = confirm(textPrefix + displayText + textSuffix);
+
+    displayText = 'lower case letters';
+    useLowerCaseLetters = confirm(textPrefix + displayText + textSuffix);
+
+    displayText = 'upper case letters';
+    useUpperCaseLetters = confirm(textPrefix + displayText + textSuffix);
+
+    isInputCollected = useSpecialCharacters || useNumbers || useLowerCaseLetters || useUpperCaseLetters;
+    
+    if (!isInputCollected) {
+      alert(errorMessage);
+    }
+  }
+
+  isInputCollected = false;
+  while (!isInputCollected) {
+    passwordLength = prompt('What should the length of the password be?  Please choose a number between 8 and 128 and press OK.');
+
+    if (isNaN(passwordLength)) {
+      alert('Must enter a numeric value.  Please try again and press OK.');
+    } else if (passwordLength < 8 || passwordLength > 128) {
+      alert('Value must be between 8 and 128.  Please try again and press OK.');
+    } else {
+      //alert('Press the "Generate Password" button when you are ready.  You may keep pressing it as many times as you like until getting a password to your liking.');
+      isInputCollected = true;
+    }
+  }
+
+}
 
 function chooseRandom(array) {
   var randomIndex = Math.floor(Math.random() * array.length);
@@ -23,7 +68,7 @@ function chooseRandom(array) {
 function shuffle(array) {
   for(let currentIndex = array.length - 1; currentIndex > 0; currentIndex--) { 
     
-    // Get random index. Example: array length is 10, currentIndex starts at 9, randomIndex will be anywhere between 0-8.  Swap the two.
+    // Get random index to swap value with current index. Example: array length is 10, currentIndex starts at 9, randomIndex will be anywhere between 0-8.  Swap the two.
     randomIndex = Math.floor(Math.random() * currentIndex); // 
     
     // The swap
@@ -34,11 +79,7 @@ function shuffle(array) {
 }
 
 function generatePassword() {
-  
-  // Initialize array with a string and then empty it, so it will retain the string[] trype for later on when joining the contents
-  var passwordArray = [''];
-  passwordArray.pop();
-  
+  var passwordArray = [];
   var characterPool = [];
   
   // Add at least one special character if selected
@@ -65,26 +106,29 @@ function generatePassword() {
     characterPool = characterPool.concat(upperCaseLetters);
   }
   
-  // Randomly add all remaining characters
+  // Randomly add all remaining characters from the full character pool
   for (let iPwd = passwordArray.length; iPwd < passwordLength; iPwd++) {
     passwordArray = passwordArray.concat(chooseRandom(characterPool));
   }
 
-  // Shuffle the characters in the password array since the first ones will have always been one special character, one number, etc.
+  // Shuffle the characters in the password array so it doesn't always begin with one special character, then one number, etc.
   shuffle(passwordArray);
 
   var password = passwordArray.join('');
-  //var password = "hello";
   return password;
 }
 
 // Write password to the #password input
 function writePassword() {
+  getUserInputs();
   var password = generatePassword();
-  var passwordText = document.querySelector("#password");
+  var passwordText = document.querySelector('#password');
 
   passwordText.value = password;
 }
 
 // Add event listener to generate button
-generateBtn.addEventListener("click", writePassword);
+generateBtn.addEventListener('click', writePassword);
+
+// Uncomment the line below to run promopts immediately when page loads instead of waiting for the button to be pressed
+//getUserInputs();
